@@ -1,0 +1,1 @@
+After installing the bot place the Discord-token in the .env file in the root of the bot installation folder.
