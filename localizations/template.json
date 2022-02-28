@@ -1,0 +1,13 @@
+{
+  "slashcmd": {
+    "verify": {
+      "description":"",
+      "options": {
+        "account": ""
+      }
+    },
+    "unverify": {
+      "description":""
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "slashcmd": {
+    "verify": {
+      "description":"Verifiziert den Steam, Faceit oder Twitter account eines Benutzers",
+      "options": {
+        "account": "steam, faceit oder twitter um den jeweiligen account zu verifizieren"
+      }
+    },
+    "unverify": {
+      "description":""
+    }
+  }
+}
+
+
