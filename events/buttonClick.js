@@ -11,6 +11,6 @@ module.exports = {
 
         if(!button) return;
 
-        button.run(client, interaction, params);
+        button.run(bot, interaction, params);
     }
 }

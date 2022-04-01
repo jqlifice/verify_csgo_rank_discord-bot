@@ -1,7 +1,8 @@
 /**
  * Commands.js is the loader file for all events stored in the /commands/ folder.
  * When called, it exports all commands in /commands/, making them available for the bot.
- * These commands are the "classic way of handling commands in discord, using a prefix[index.js -> bot].
+ * These commands are the "classic" way of handling commands in discord before slashcommand support was added, using a prefix[index.js -> bot].
+ * This command-syntax is used to set up the Buttons for the button interactions within this bot.
  */
 
 const {getFiles} = require ("../util/functions");

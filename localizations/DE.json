@@ -1,7 +1,7 @@
 {
   "slashcmd": {
     "verify": {
-      "description":"Verifiziert den Steam, Faceit oder Twitter account eines Benutzers",
+      "description":"Verifiziert den Steam oder Faceit account eines Benutzers",
       "options": {
         "account": "steam, faceit oder twitter um den jeweiligen account zu verifizieren"
       }

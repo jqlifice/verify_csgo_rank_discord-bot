@@ -12,12 +12,17 @@
   "dependencies": {
     "@discordjs/builders": "^0.12.0",
     "@discordjs/rest": "^0.3.0",
+    "axios": "^0.26.1",
     "discord-api-types": "^0.27.2",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "fs": "^0.0.1-security",
+    "globaloffensive": "^2.2.0",
     "path": "^0.12.7",
     "pg": "^8.7.3",
-    "wokcommands": "^1.5.3"
+    "steam-user": "^4.24.0",
+    "wokcommands": "^1.5.3",
+    "xml2js": "^0.4.23",
+    "xmlhttprequest": "^1.8.0"
   }
 }

@@ -1,5 +1,5 @@
 /**
- * messageCreate.js dictates the bots behavior on any message beeing sent by a user, this will be used for the level system.
+ * messageCreate.js dictates the bot's behavior on any message being sent by a user, this will be used for the level system.
  * This also is used for the legacy (prefix)commands.
  */
 //TODO: levelsystem
