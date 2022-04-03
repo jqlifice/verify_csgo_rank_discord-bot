@@ -38,8 +38,12 @@ module.exports = {
         //defers the Reply to make sure the command does not time out while running queries, before a first response can be sent
         interaction.deferReply({ephemeral: true});
 
-        discordUserCheck(bot.dbClient, interaction.user.id).then(()=>{
-            sleep(2000).then(()=> { //discord takes a short while to acknowledge the face that a reply has been deferred, so the bot halts for 2 seconds b4 sending any responses
+        discordUserCheck(bot.dbClient, interaction.user.id).then((resolve, reject)=>{
+            if(reject){
+                console.log("DB Error", reject);
+            }
+            console.log(resolve);
+            if(resolve) sleep(2000).then(()=> { //discord takes a short while to acknowledge the face that a reply has been deferred, so the bot halts for 2 seconds b4 sending any responses
                 switch (accSwitch) { //this switch dictates the logic behind each parameter
                     case "steam":
                         let intErr = false;
@@ -57,14 +61,17 @@ module.exports = {
                                 return interaction.followUp({content: "ERROR: Steam already verified. To Update your rank use /verify update please.", ephemeral: true});
                             }
                             if (!/^\d+$/.test(acc)) { //checks if user provided account does not consist of only numbers
-                                if(/^((http)s?:(www\.)?\/\/)?steamcommunity\.com\/profile\/.+$/.test(acc)){ //checks if it's a steamcommunity.com/profile/ link
+                                console.log(acc);
+                                if(/^((http)s?:\/\/(www\.)?)?steamcommunity\.com\/profile\/.+$/.test(acc)){ //checks if it's a steamcommunity.com/profile/ link
                                     acc=acc.replace(/^((http)s?:(www\.)?\/\/)?steamcommunity\.com\/profile\//,""); //passes the steamID in the /profile link to addUser
                                 }
-                                if(/^((http)s?:(www\.)?\/\/)?steamcommunity\.com\/id\/.+$/.test(acc)){ //checks if it's a steamcommunity.com/id link
+                                if(/^((http)s?:\/\/(www\.)?)?steamcommunity\.com\/id\/.+$/.test(acc)){ //checks if it's a steamcommunity.com/id link
+                                    console.log("match");
+                                    console.log(acc.replace(/^((http)s?:\/\/(www\.)?)?steamcommunity\.com/,"").concat("?xml=1"));
                                     const options={
                                         hostname: "steamcommunity.com",
                                         port: 443,
-                                        path: acc.replace(/^((http)s?:(www\.)?\/\/)?steamcommunity\.com/,"").concat("?xml=1"), //strips the (https://www.)steamcommunity.com part from the link and appends the "?xml=1" parameter to the end of the URL-Path, requesting steam to return the profile in XML format
+                                        path: acc.replace(/^((http)s?:\/\/(www\.)?)?steamcommunity\.com/,"").concat("?xml=1"), //strips the (https://www.)steamcommunity.com part from the link and appends the "?xml=1" parameter to the end of the URL-Path, requesting steam to return the profile in XML format
                                         method: 'GET'
                                     };
 
@@ -146,8 +153,12 @@ module.exports = {
                                                     });
                                                 });
                                             }else{
-                                                console.log(add);
-                                                interaction.followUp({content: "internal error", ephemeral: true});
+                                                if(!add.rank){
+                                                    interaction.followUp({content: "5 minutes are over, try again.", ephemeral: true});
+                                                }else{
+                                                    console.log(add);
+                                                    interaction.followUp({content: "internal error", ephemeral: true});
+                                                }
                                             }
                                         });
                                     }
@@ -269,7 +280,7 @@ module.exports = {
  * checks weather a User is already in the linked Postgres Database and if not adds them to the Database
  * @param dbClient requires the postgres DB-Client object
  * @param user requires the discord userID of the user
- * @returns {} resolves with value null if it succeeds, rejects with value "DB error", if an error occurs, the error is logged.
+ * @returns {} resolves with value true if it succeeds, rejects with the DB error
  */
 function discordUserCheck(dbClient, user){
     const queryCheckDiscord = 'SELECT exists(SELECT 1 FROM veriflyUserDatabase WHERE discord_id = $1)';
@@ -277,18 +288,16 @@ function discordUserCheck(dbClient, user){
     return new Promise(function(resolve, reject){
         dbClient.query(queryCheckDiscord, [user], (err, res) => {
             if(err){
-                console.log(err);
-                reject("DB error");
+                reject(err);
             }else{
-                resolve();
+                resolve(true);
             }
             if(!res.rows[0].exists){
                 dbClient.query(queryInsertDiscord, [user], (err, res) => {
                     if(err){
-                        console.log(err);
-                        reject("DB error");
+                        reject(err);
                     } else{
-                        resolve();
+                        resolve(true);
                     }
                 });
             }
@@ -305,7 +314,7 @@ function discordUserCheck(dbClient, user){
  *  [true]14: Account was already added
  *  [true]null: <expected behavior> user was added
  *  [false]2: The Steam account doesn't exist
- *  [false]null: Unknown Error
+ *  [false]err: Unknown Error
  */
 function addUser(acc, steamClient, callback){
     steamClient.addFriend(acc, (err, res) => {
@@ -326,9 +335,8 @@ function addUser(acc, steamClient, callback){
                 default:
                     callback({
                         success: false,
-                        code: null
+                        code: err
                     });
-                    console.log(err);
                     break;
             }
         } else {
@@ -350,7 +358,7 @@ function addUser(acc, steamClient, callback){
  */
 function processAddedSteam(steamClient, csgoGC, confCode, acc){
     return new Promise(function(resolve){
-        let timer = setTimeout(resolve, 300000,{conf: false, rank: null});
+        let timer = setTimeout(resolve, 300000,{conf: false, rank: undefined});
         steamClient.on(`friendMessage#${acc}`, function(steamID, message){
             if(parseInt(message) === confCode){
                 csgoGC.requestPlayersProfile(acc, (res) => {
