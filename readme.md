@@ -1,8 +1,8 @@
-#Setup
-##.env File
+# Setup
+## .env File
 After installing the bot create an .env file in the root of the bot installation folder.
 Configure it as follows:
-```lombok.config
+```shell
 TOKEN=your Discord bot token
 GUILD_ID=your Server ID (used for development)
 language=your language code - avivable(DE, EN)
@@ -21,9 +21,9 @@ CSGO_RANK_DC_ID=IDs of your discord roles matching csgo ranks in ascending order
 Faceit_RANK_Seperator_ID=ID of your faceit rank seperator role, or empty if you dont want to use serperators
 Faceit_RANK_DC_ID=IDs of your discord roles matching csgo ranks in ascending order(id for level 1, id for level 2, ..., id for level 10)
 ```
-##DB
+## DB
 The bot requires a Postgres Database. Provide the credentials in the .env file (as mentioned above).\
 Further create the following Table and grant the account used for the Bot read and write permissions on it.
-```postgresql
+```sql
 CREATE TABLE veriflyUserDatabase(discord_id bigint PRIMARY KEY, steam_id bigint DEFAULT NULL, faceit_id text DEFAULT NULL, status text DEFAULT 'user' check(status IN('user', 'mod')))
 ```
