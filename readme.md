@@ -2,7 +2,7 @@
 ## .env File
 After installing the bot create an .env file in the root of the bot installation folder.
 Configure it as follows:
-```shell
+```ini
 TOKEN=your Discord bot token
 GUILD_ID=your Server ID (used for development)
 language=your language code - avivable(DE, EN)
