@@ -27,3 +27,21 @@ Further create the following Table and grant the account used for the Bot read a
 ```sql
 CREATE TABLE veriflyUserDatabase(discord_id bigint PRIMARY KEY, steam_id bigint DEFAULT NULL, faceit_id text DEFAULT NULL, status text DEFAULT 'user' check(status IN('user', 'mod')))
 ```
+## Finish Setup
+ loadSlash.js is used to load the Slash commands the bot is going to use. This has to be done before the bot goes live.
+ To do so, simply run "node loadSlash.js" in the root directory of the bot. After the program successfully terminated you can load the bot.
+ IMPORTANT: THIS FILE HAS TO BE EXECUTED EVERY TIME YOU ADD A NEW COMMAND.
+ 
+## Run the bot
+ ```bash
+  node index.js
+ ```
+
+## Why is this declared unfinished, it works?
+ 1. Localizations are missing / command prompts are hardcoded
+ 2. Errors are only thrown to console
+ 3. Some documentation is missing
+ 4. index.js probably should be called main.js
+ 5. code quality is a bit iffy at some points (This bot was one of my first actual projects, which was bigger than a couple lines of code)
+ 
+ If you want to address any of these issues feel free to do so and create a PR i'll definitly look at it!
