@@ -34,7 +34,7 @@ CREATE TABLE veriflyUserDatabase(discord_id bigint PRIMARY KEY, steam_id bigint 
  
 ## Run the bot
  ```bash
-  node index.js
+ node index.js
  ```
 
 ## Why is this declared unfinished, it works?
